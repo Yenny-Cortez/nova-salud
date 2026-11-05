@@ -4,9 +4,10 @@
   "description": "",
   "main": "src/index.js",
      "scripts": {
-     "start": "node src/index.js",
-     "dev": "nodemon src/index.js"
-   },
+  "start": "node src/index.js",
+  "dev": "nodemon src/index.js",
+  "seed:usuarios": "node src/scripts/crearUsuarios.js"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
