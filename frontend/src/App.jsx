@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react'
 import './App.css'
+import Productos from './Productos'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
@@ -35,7 +36,9 @@ async function consultarAPI(ruta, token) {
   const datos = await respuesta.json()
 
   if (respuesta.status === 401 || respuesta.status === 403) {
-    throw new Error('Tu sesión no es válida o ha expirado. Inicia sesión nuevamente.')
+    throw new Error(
+      'Tu sesión no es válida o ha expirado. Inicia sesión nuevamente.',
+    )
   }
 
   if (!respuesta.ok) {
@@ -51,6 +54,8 @@ function App() {
   const [mostrarContrasena, setMostrarContrasena] = useState(false)
   const [cargandoLogin, setCargandoLogin] = useState(false)
   const [errorLogin, setErrorLogin] = useState('')
+
+  const [vista, setVista] = useState('inicio')
 
   const [sesion, setSesion] = useState(() => {
     const token = localStorage.getItem('nova_salud_token')
@@ -112,7 +117,9 @@ function App() {
       }
 
       if (!resultado.token || !resultado.usuario) {
-        throw new Error('La respuesta del servidor no contiene los datos esperados.')
+        throw new Error(
+          'La respuesta del servidor no contiene los datos esperados.',
+        )
       }
 
       localStorage.setItem('nova_salud_token', resultado.token)
@@ -126,6 +133,7 @@ function App() {
         usuario: resultado.usuario,
       })
 
+      setVista('inicio')
       setContrasena('')
     } catch (error) {
       setErrorLogin(
@@ -147,6 +155,7 @@ function App() {
     setContrasena('')
     setErrorLogin('')
     setErrorDashboard('')
+    setVista('inicio')
   }
 
   async function cargarDashboard() {
@@ -189,15 +198,15 @@ function App() {
   }
 
   useEffect(() => {
-  if (!sesion?.token) return
+    if (!sesion?.token) return
 
-  const temporizador = setTimeout(() => {
-    cargarDashboard()
-  }, 0)
+    const temporizador = setTimeout(() => {
+      cargarDashboard()
+    }, 0)
 
-  return () => clearTimeout(temporizador)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [sesion?.token])
+    return () => clearTimeout(temporizador)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sesion?.token])
 
   if (!sesion) {
     return (
@@ -268,7 +277,9 @@ function App() {
                     <button
                       className="show-password"
                       type="button"
-                      onClick={() => setMostrarContrasena(!mostrarContrasena)}
+                      onClick={() =>
+                        setMostrarContrasena(!mostrarContrasena)
+                      }
                     >
                       {mostrarContrasena ? 'Ocultar' : 'Mostrar'}
                     </button>
@@ -328,16 +339,43 @@ function App() {
         <p className="sidebar-label">MENÚ PRINCIPAL</p>
 
         <nav className="sidebar-nav">
-          <a className="nav-link active" href="#inicio">
+          <button
+            type="button"
+            className={`nav-link ${vista === 'inicio' ? 'active' : ''}`}
+            onClick={() => setVista('inicio')}
+          >
             <span>▦</span> Inicio
-          </a>
-          <a className="nav-link" href="#alertas">
+          </button>
+
+          <button
+            type="button"
+            className={`nav-link ${vista === 'productos' ? 'active' : ''}`}
+            onClick={() => setVista('productos')}
+          >
+            <span>▣</span> Productos
+          </button>
+
+          <a
+            className="nav-link"
+            href="#alertas"
+            onClick={() => setVista('inicio')}
+          >
             <span>⚠</span> Alertas de stock
           </a>
-          <a className="nav-link" href="#ventas">
+
+          <a
+            className="nav-link"
+            href="#ventas"
+            onClick={() => setVista('inicio')}
+          >
             <span>▤</span> Ventas recientes
           </a>
-          <a className="nav-link" href="#movimientos">
+
+          <a
+            className="nav-link"
+            href="#movimientos"
+            onClick={() => setVista('inicio')}
+          >
             <span>↕</span> Movimientos
           </a>
         </nav>
@@ -360,192 +398,223 @@ function App() {
       </aside>
 
       <section className="dashboard-content" id="inicio">
-        <header className="dashboard-header">
-          <div>
-            <span className="dashboard-eyebrow">PANEL DE CONTROL</span>
-            <h1>¡Hola, {sesion.usuario.nombre}!</h1>
-            <p>Este es el resumen de tu farmacia.</p>
-          </div>
-
-          <button
-            className="refresh-button"
-            onClick={cargarDashboard}
-            disabled={cargandoDashboard}
-          >
-            <span>↻</span>
-            {cargandoDashboard ? 'Actualizando...' : 'Actualizar datos'}
-          </button>
-        </header>
-
-        {errorDashboard && (
-          <div className="dashboard-error" role="alert">
-            {errorDashboard}
-            <button onClick={cargarDashboard}>Reintentar</button>
-          </div>
-        )}
-
-        <section className="stats-grid">
-          <article className="stat-card">
-            <div className="stat-icon green">▣</div>
-            <span>Productos activos</span>
-            <strong>{cargandoDashboard ? '...' : datos.productos.length}</strong>
-            <small>Productos registrados</small>
-          </article>
-
-          <article className="stat-card">
-            <div className="stat-icon blue">▤</div>
-            <span>Categorías</span>
-            <strong>{cargandoDashboard ? '...' : datos.categorias.length}</strong>
-            <small>Categorías registradas</small>
-          </article>
-
-          <article className="stat-card">
-            <div className="stat-icon purple">S/</div>
-            <span>Total vendido</span>
-            <strong className="money-value">
-              {cargandoDashboard ? '...' : formatoMoneda(totalVendido)}
-            </strong>
-            <small>{datos.ventas.length} ventas registradas</small>
-          </article>
-
-          <article className="stat-card">
-            <div className="stat-icon orange">⚠</div>
-            <span>Stock bajo</span>
-            <strong>{cargandoDashboard ? '...' : datos.alertas.length}</strong>
-            <small>Productos por reponer</small>
-          </article>
-        </section>
-
-        <section className="dashboard-grid">
-          <article className="dashboard-panel sales-panel" id="ventas">
-            <div className="panel-heading">
+        {vista === 'productos' ? (
+          <Productos
+            token={sesion.token}
+            categorias={datos.categorias}
+            esAdmin={sesion.usuario.rol === 'admin'}
+          />
+        ) : (
+          <>
+            <header className="dashboard-header">
               <div>
-                <h2>Ventas recientes</h2>
-                <p>Últimas operaciones registradas</p>
+                <span className="dashboard-eyebrow">PANEL DE CONTROL</span>
+                <h1>¡Hola, {sesion.usuario.nombre}!</h1>
+                <p>Este es el resumen de tu farmacia.</p>
               </div>
-              <span className="panel-tag">VENTAS</span>
-            </div>
 
-            {ventasRecientes.length === 0 ? (
-              <div className="empty-state">
-                {cargandoDashboard ? 'Cargando ventas...' : 'Todavía no hay ventas registradas.'}
+              <button
+                className="refresh-button"
+                onClick={cargarDashboard}
+                disabled={cargandoDashboard}
+              >
+                <span>↻</span>
+                {cargandoDashboard ? 'Actualizando...' : 'Actualizar datos'}
+              </button>
+            </header>
+
+            {errorDashboard && (
+              <div className="dashboard-error" role="alert">
+                {errorDashboard}
+                <button onClick={cargarDashboard}>Reintentar</button>
               </div>
-            ) : (
-              <div className="table-wrapper">
-                <table className="dashboard-table">
-                  <thead>
-                    <tr>
-                      <th>N.º</th>
-                      <th>Vendedor</th>
-                      <th>Fecha</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {ventasRecientes.map((venta) => (
-                      <tr key={venta.id}>
-                        <td>#{venta.id}</td>
-                        <td>{venta.vendedor || 'Usuario'}</td>
-                        <td>{formatoFecha(venta.fecha)}</td>
-                        <td className="table-total">
-                          {formatoMoneda(venta.total)}
-                        </td>
-                      </tr>
+            )}
+
+            <section className="stats-grid">
+              <article className="stat-card">
+                <div className="stat-icon green">▣</div>
+                <span>Productos activos</span>
+                <strong>
+                  {cargandoDashboard ? '...' : datos.productos.length}
+                </strong>
+                <small>Productos registrados</small>
+              </article>
+
+              <article className="stat-card">
+                <div className="stat-icon blue">▤</div>
+                <span>Categorías</span>
+                <strong>
+                  {cargandoDashboard ? '...' : datos.categorias.length}
+                </strong>
+                <small>Categorías registradas</small>
+              </article>
+
+              <article className="stat-card">
+                <div className="stat-icon purple">S/</div>
+                <span>Total vendido</span>
+                <strong className="money-value">
+                  {cargandoDashboard ? '...' : formatoMoneda(totalVendido)}
+                </strong>
+                <small>{datos.ventas.length} ventas registradas</small>
+              </article>
+
+              <article className="stat-card">
+                <div className="stat-icon orange">⚠</div>
+                <span>Stock bajo</span>
+                <strong>
+                  {cargandoDashboard ? '...' : datos.alertas.length}
+                </strong>
+                <small>Productos por reponer</small>
+              </article>
+            </section>
+
+            <section className="dashboard-grid">
+              <article className="dashboard-panel sales-panel" id="ventas">
+                <div className="panel-heading">
+                  <div>
+                    <h2>Ventas recientes</h2>
+                    <p>Últimas operaciones registradas</p>
+                  </div>
+                  <span className="panel-tag">VENTAS</span>
+                </div>
+
+                {ventasRecientes.length === 0 ? (
+                  <div className="empty-state">
+                    {cargandoDashboard
+                      ? 'Cargando ventas...'
+                      : 'Todavía no hay ventas registradas.'}
+                  </div>
+                ) : (
+                  <div className="table-wrapper">
+                    <table className="dashboard-table">
+                      <thead>
+                        <tr>
+                          <th>N.º</th>
+                          <th>Vendedor</th>
+                          <th>Fecha</th>
+                          <th>Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {ventasRecientes.map((venta) => (
+                          <tr key={venta.id}>
+                            <td>#{venta.id}</td>
+                            <td>{venta.vendedor || 'Usuario'}</td>
+                            <td>{formatoFecha(venta.fecha)}</td>
+                            <td className="table-total">
+                              {formatoMoneda(venta.total)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </article>
+
+              <article className="dashboard-panel alerts-panel" id="alertas">
+                <div className="panel-heading">
+                  <div>
+                    <h2>Alertas de stock</h2>
+                    <p>Productos que necesitan atención</p>
+                  </div>
+                  <span className="alert-count">{datos.alertas.length}</span>
+                </div>
+
+                {datos.alertas.length === 0 ? (
+                  <div className="empty-state">
+                    {cargandoDashboard
+                      ? 'Consultando inventario...'
+                      : 'No hay productos con stock bajo.'}
+                  </div>
+                ) : (
+                  <div className="alert-list">
+                    {datos.alertas.slice(0, 6).map((producto) => (
+                      <div className="alert-item" key={producto.id}>
+                        <div className="alert-product-icon">!</div>
+                        <div className="alert-product-info">
+                          <strong>{producto.nombre}</strong>
+                          <span>
+                            {producto.codigo} ·{' '}
+                            {producto.categoria || 'Sin categoría'}
+                          </span>
+                        </div>
+                        <div className="alert-stock">
+                          <strong>{producto.stock}</strong>
+                          <span>Mín. {producto.stock_minimo}</span>
+                        </div>
+                      </div>
                     ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </article>
-
-          <article className="dashboard-panel alerts-panel" id="alertas">
-            <div className="panel-heading">
-              <div>
-                <h2>Alertas de stock</h2>
-                <p>Productos que necesitan atención</p>
-              </div>
-              <span className="alert-count">{datos.alertas.length}</span>
-            </div>
-
-            {datos.alertas.length === 0 ? (
-              <div className="empty-state">
-                {cargandoDashboard ? 'Consultando inventario...' : 'No hay productos con stock bajo.'}
-              </div>
-            ) : (
-              <div className="alert-list">
-                {datos.alertas.slice(0, 6).map((producto) => (
-                  <div className="alert-item" key={producto.id}>
-                    <div className="alert-product-icon">!</div>
-                    <div className="alert-product-info">
-                      <strong>{producto.nombre}</strong>
-                      <span>{producto.codigo} · {producto.categoria || 'Sin categoría'}</span>
-                    </div>
-                    <div className="alert-stock">
-                      <strong>{producto.stock}</strong>
-                      <span>Mín. {producto.stock_minimo}</span>
-                    </div>
                   </div>
-                ))}
-              </div>
-            )}
-          </article>
+                )}
+              </article>
 
-          <article className="dashboard-panel movements-panel" id="movimientos">
-            <div className="panel-heading">
-              <div>
-                <h2>Movimientos de inventario</h2>
-                <p>Entradas y salidas recientes</p>
-              </div>
-              <span className="panel-tag">INVENTARIO</span>
-            </div>
-
-            {movimientosRecientes.length === 0 ? (
-              <div className="empty-state">
-                {cargandoDashboard ? 'Cargando movimientos...' : 'Todavía no hay movimientos registrados.'}
-              </div>
-            ) : (
-              <div className="movement-list">
-                {movimientosRecientes.map((movimiento) => (
-                  <div className="movement-item" key={movimiento.id}>
-                    <span
-                      className={`movement-symbol ${
-                        movimiento.tipo === 'entrada' ? 'entry' : 'exit'
-                      }`}
-                    >
-                      {movimiento.tipo === 'entrada' ? '↓' : '↑'}
-                    </span>
-                    <div className="movement-info">
-                      <strong>{movimiento.producto}</strong>
-                      <span>{formatoFecha(movimiento.fecha)}</span>
-                    </div>
-                    <div className="movement-quantity">
-                      <strong>{movimiento.tipo === 'entrada' ? '+' : '-'}{movimiento.cantidad}</strong>
-                      <span>{movimiento.tipo}</span>
-                    </div>
+              <article
+                className="dashboard-panel movements-panel"
+                id="movimientos"
+              >
+                <div className="panel-heading">
+                  <div>
+                    <h2>Movimientos de inventario</h2>
+                    <p>Entradas y salidas recientes</p>
                   </div>
-                ))}
-              </div>
-            )}
-          </article>
+                  <span className="panel-tag">INVENTARIO</span>
+                </div>
 
-          <article className="dashboard-panel account-panel">
-            <div className="account-decoration">+</div>
-            <span className="dashboard-eyebrow">CUENTA ACTIVA</span>
-            <h2>{sesion.usuario.nombre}</h2>
-            <p>{sesion.usuario.correo}</p>
-            <div className="account-role">
-              <span className="status-dot" />
-              Rol: {sesion.usuario.rol}
-            </div>
-            <div className="account-note">
-              Bienvenido al sistema de gestión de Botica Nova Salud.
-            </div>
-          </article>
-        </section>
+                {movimientosRecientes.length === 0 ? (
+                  <div className="empty-state">
+                    {cargandoDashboard
+                      ? 'Cargando movimientos...'
+                      : 'Todavía no hay movimientos registrados.'}
+                  </div>
+                ) : (
+                  <div className="movement-list">
+                    {movimientosRecientes.map((movimiento) => (
+                      <div className="movement-item" key={movimiento.id}>
+                        <span
+                          className={`movement-symbol ${
+                            movimiento.tipo === 'entrada' ? 'entry' : 'exit'
+                          }`}
+                        >
+                          {movimiento.tipo === 'entrada' ? '↓' : '↑'}
+                        </span>
+                        <div className="movement-info">
+                          <strong>{movimiento.producto}</strong>
+                          <span>{formatoFecha(movimiento.fecha)}</span>
+                        </div>
+                        <div className="movement-quantity">
+                          <strong>
+                            {movimiento.tipo === 'entrada' ? '+' : '-'}
+                            {movimiento.cantidad}
+                          </strong>
+                          <span>{movimiento.tipo}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </article>
 
-        <footer className="dashboard-footer">
-          Botica Nova Salud · Sistema de gestión de farmacia · 2026
-        </footer>
+              <article className="dashboard-panel account-panel">
+                <div className="account-decoration">+</div>
+                <span className="dashboard-eyebrow">CUENTA ACTIVA</span>
+                <h2>{sesion.usuario.nombre}</h2>
+                <p>{sesion.usuario.correo}</p>
+                <div className="account-role">
+                  <span className="status-dot" />
+                  Rol: {sesion.usuario.rol}
+                </div>
+                <div className="account-note">
+                  Bienvenido al sistema de gestión de Botica Nova Salud.
+                </div>
+              </article>
+            </section>
+
+            <footer className="dashboard-footer">
+              Botica Nova Salud · Sistema de gestión de farmacia · 2026
+            </footer>
+          </>
+        )}
       </section>
     </main>
   )

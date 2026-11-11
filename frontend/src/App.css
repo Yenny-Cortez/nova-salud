@@ -995,3 +995,11 @@
     padding: 30px 23px;
   }
 }
+
+.sidebar-nav button.nav-link {
+  width: 100%;
+  border: 0;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
