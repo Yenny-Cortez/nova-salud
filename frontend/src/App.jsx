@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import Productos from './Productos'
 import Categorias from './Categorias'
+import Ventas from './Ventas'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
@@ -34,7 +35,7 @@ async function consultarAPI(ruta, token) {
     },
   })
 
-  const datos = await respuesta.json()
+  const datos = await respuesta.json().catch(() => ({}))
 
   if (respuesta.status === 401 || respuesta.status === 403) {
     throw new Error(
@@ -111,7 +112,7 @@ function App() {
         }),
       })
 
-      const resultado = await respuesta.json()
+      const resultado = await respuesta.json().catch(() => ({}))
 
       if (!respuesta.ok) {
         throw new Error(resultado.mensaje || 'No se pudo iniciar sesión.')
@@ -357,36 +358,36 @@ function App() {
           </button>
 
           <button
-  type="button"
-  className={`nav-link ${vista === 'categorias' ? 'active' : ''}`}
-  onClick={() => setVista('categorias')}
->
-  <span>▤</span> Categorías
-</button>
+            type="button"
+            className={`nav-link ${vista === 'categorias' ? 'active' : ''}`}
+            onClick={() => setVista('categorias')}
+          >
+            <span>▤</span> Categorías
+          </button>
 
-          <a
-            className="nav-link"
-            href="#alertas"
+          <button
+            type="button"
+            className={`nav-link ${vista === 'ventas' ? 'active' : ''}`}
+            onClick={() => setVista('ventas')}
+          >
+            <span>▤</span> Ventas
+          </button>
+
+          <button
+            type="button"
+            className={`nav-link ${vista === 'inicio' ? '' : ''}`}
             onClick={() => setVista('inicio')}
           >
             <span>⚠</span> Alertas de stock
-          </a>
+          </button>
 
-          <a
+          <button
+            type="button"
             className="nav-link"
-            href="#ventas"
-            onClick={() => setVista('inicio')}
-          >
-            <span>▤</span> Ventas recientes
-          </a>
-
-          <a
-            className="nav-link"
-            href="#movimientos"
             onClick={() => setVista('inicio')}
           >
             <span>↕</span> Movimientos
-          </a>
+          </button>
         </nav>
 
         <div className="sidebar-bottom">
@@ -400,26 +401,35 @@ function App() {
             </div>
           </div>
 
-          <button className="sidebar-logout" onClick={cerrarSesion}>
+          <button
+            type="button"
+            className="sidebar-logout"
+            onClick={cerrarSesion}
+          >
             Cerrar sesión
           </button>
         </div>
       </aside>
 
       <section className="dashboard-content" id="inicio">
-        {vista === 'categorias' ? (
-  <Categorias
-    token={sesion.token}
-    esAdmin={sesion.usuario.rol === 'admin'}
-    onCambio={cargarDashboard}
-  />
-) : vista === 'productos' ? (
-  <Productos
-    token={sesion.token}
-    categorias={datos.categorias}
-    esAdmin={sesion.usuario.rol === 'admin'}
-  />
-) : (
+        {vista === 'ventas' ? (
+          <Ventas
+            token={sesion.token}
+            onCambio={cargarDashboard}
+          />
+        ) : vista === 'categorias' ? (
+          <Categorias
+            token={sesion.token}
+            esAdmin={sesion.usuario.rol === 'admin'}
+            onCambio={cargarDashboard}
+          />
+        ) : vista === 'productos' ? (
+          <Productos
+            token={sesion.token}
+            categorias={datos.categorias}
+            esAdmin={sesion.usuario.rol === 'admin'}
+          />
+        ) : (
           <>
             <header className="dashboard-header">
               <div>
@@ -429,6 +439,7 @@ function App() {
               </div>
 
               <button
+                type="button"
                 className="refresh-button"
                 onClick={cargarDashboard}
                 disabled={cargandoDashboard}
@@ -441,7 +452,9 @@ function App() {
             {errorDashboard && (
               <div className="dashboard-error" role="alert">
                 {errorDashboard}
-                <button onClick={cargarDashboard}>Reintentar</button>
+                <button type="button" onClick={cargarDashboard}>
+                  Reintentar
+                </button>
               </div>
             )}
 
