@@ -2,10 +2,12 @@
 const router = require('express').Router();
 
 const ventas = require('../controllers/ventasController');
+const reportes = require('../controllers/reportesController');
 const { verificarToken } = require('../middleware/auth');
 
 router.use(verificarToken);
 
+router.get('/reportes', reportes.obtenerReportes);
 router.get('/', ventas.listar);
 router.get('/:id', ventas.obtener);
 router.post('/', ventas.registrar);

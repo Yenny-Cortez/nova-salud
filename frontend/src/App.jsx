@@ -5,6 +5,7 @@ import Productos from './Productos'
 import Categorias from './Categorias'
 import Ventas from './Ventas'
 import Inventario from './Inventario'
+import Reportes from './Reportes'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
@@ -381,6 +382,14 @@ function App() {
           >
             <span>▥</span> Inventario
           </button>
+
+          <button
+            type="button"
+            className={`nav-link ${vista === 'reportes' ? 'active' : ''}`}
+            onClick={() => setVista('reportes')}
+          >
+            <span>▧</span> Reportes
+          </button>
         </nav>
 
         <div className="sidebar-bottom">
@@ -405,7 +414,9 @@ function App() {
       </aside>
 
       <section className="dashboard-content" id="inicio">
-        {vista === 'ventas' ? (
+        {vista === 'reportes' ? (
+          <Reportes token={sesion.token} />
+        ) : vista === 'ventas' ? (
           <Ventas
             token={sesion.token}
             onCambio={cargarDashboard}

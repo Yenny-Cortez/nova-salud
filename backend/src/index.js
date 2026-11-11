@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 
 const express = require('express');
@@ -10,6 +9,7 @@ const categoriasRoutes = require('./routes/categorias');
 const productosRoutes = require('./routes/productos');
 const ventasRoutes = require('./routes/ventas');
 const inventarioRoutes = require('./routes/inventario');
+const reportesRoutes = require('./routes/reportes');
 
 const app = express();
 
@@ -37,6 +37,7 @@ app.use('/api/categorias', categoriasRoutes);
 app.use('/api/productos', productosRoutes);
 app.use('/api/ventas', ventasRoutes);
 app.use('/api/inventario', inventarioRoutes);
+app.use('/api/reportes', reportesRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
