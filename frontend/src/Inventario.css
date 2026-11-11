@@ -1,0 +1,227 @@
+
+.inventario {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+}
+
+.inventario-encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.inventario-encabezado h2 {
+  margin: 0 0 6px;
+  color: #183b35;
+  font-size: 25px;
+}
+
+.inventario-encabezado p,
+.inventario-panel > p {
+  margin: 0;
+  color: #71817c;
+}
+
+.inventario-btn-actualizar,
+.inventario-formulario button {
+  border: none;
+  border-radius: 8px;
+  padding: 11px 18px;
+  background: #187b65;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.inventario-btn-actualizar:hover,
+.inventario-formulario button:hover {
+  background: #12634f;
+}
+
+.inventario button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.inventario-resumen {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.inventario-tarjeta,
+.inventario-panel {
+  background: white;
+  border: 1px solid #e5ece9;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 3px 12px rgba(20, 60, 48, 0.04);
+}
+
+.inventario-tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.inventario-tarjeta span {
+  color: #71817c;
+  font-size: 14px;
+}
+
+.inventario-tarjeta strong {
+  color: #187b65;
+  font-size: 30px;
+}
+
+.inventario-panel h3 {
+  margin: 0 0 10px;
+  color: #183b35;
+  font-size: 18px;
+}
+
+.inventario-formulario {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  align-items: end;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.inventario-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.inventario-campo label {
+  color: #42564f;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.inventario-campo input,
+.inventario-campo select {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 1px solid #d5e0db;
+  border-radius: 7px;
+  background: white;
+  color: #263d35;
+  font: inherit;
+}
+
+.inventario-campo input:focus,
+.inventario-campo select:focus {
+  outline: 2px solid #a4d9c8;
+  border-color: #187b65;
+}
+
+.inventario-alerta {
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.inventario-alerta.error {
+  background: #fff0ef;
+  color: #b42318;
+  border: 1px solid #ffd2ce;
+}
+
+.inventario-alerta.exito {
+  background: #eaf8f1;
+  color: #16734e;
+  border: 1px solid #c4ead5;
+}
+
+.inventario-tabla-contenedor {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
+.inventario-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.inventario-tabla th,
+.inventario-tabla td {
+  padding: 13px 12px;
+  border-bottom: 1px solid #edf1ef;
+  font-size: 13px;
+}
+
+.inventario-tabla th {
+  background: #f5f8f6;
+  color: #52665e;
+  font-weight: 700;
+}
+
+.inventario-tabla td {
+  color: #344b42;
+}
+
+.inventario-estado-bajo {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 20px;
+  background: #fff0e5;
+  color: #b45309;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.inventario-tipo {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.inventario-tipo.entrada {
+  background: #e6f6ed;
+  color: #18794e;
+}
+
+.inventario-tipo.salida {
+  background: #fff0e5;
+  color: #b45309;
+}
+
+.inventario-vacio {
+  padding: 15px 0;
+  color: #71817c;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .inventario-formulario {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .inventario-resumen {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .inventario-formulario,
+  .inventario-resumen {
+    grid-template-columns: 1fr;
+  }
+
+  .inventario-formulario button {
+    width: 100%;
+  }
+}

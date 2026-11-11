@@ -4,6 +4,7 @@ import './App.css'
 import Productos from './Productos'
 import Categorias from './Categorias'
 import Ventas from './Ventas'
+import Inventario from './Inventario'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
@@ -375,18 +376,10 @@ function App() {
 
           <button
             type="button"
-            className={`nav-link ${vista === 'inicio' ? '' : ''}`}
-            onClick={() => setVista('inicio')}
+            className={`nav-link ${vista === 'inventario' ? 'active' : ''}`}
+            onClick={() => setVista('inventario')}
           >
-            <span>⚠</span> Alertas de stock
-          </button>
-
-          <button
-            type="button"
-            className="nav-link"
-            onClick={() => setVista('inicio')}
-          >
-            <span>↕</span> Movimientos
+            <span>▥</span> Inventario
           </button>
         </nav>
 
@@ -415,6 +408,12 @@ function App() {
         {vista === 'ventas' ? (
           <Ventas
             token={sesion.token}
+            onCambio={cargarDashboard}
+          />
+        ) : vista === 'inventario' ? (
+          <Inventario
+            token={sesion.token}
+            esAdmin={sesion.usuario.rol === 'admin'}
             onCambio={cargarDashboard}
           />
         ) : vista === 'categorias' ? (
