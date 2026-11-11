@@ -124,6 +124,7 @@ async function registrar(req, res) {
       mensaje: 'Venta registrada correctamente',
       venta: {
         ...venta.rows[0],
+        vendedor: req.usuario.nombre,
         total: Number(venta.rows[0].total),
         detalles
       }

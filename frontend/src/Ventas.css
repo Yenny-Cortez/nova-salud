@@ -423,3 +423,242 @@
     padding: 16px;
   }
 }
+
+/* =========================================
+   BOLETA INTERNA DE NOVA SALUD
+========================================= */
+
+.ventas-boleta {
+  max-width: 760px;
+  max-height: 90vh;
+  padding: 30px;
+}
+
+.ventas-boleta-acciones {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.ventas-boleta-imprimir {
+  padding: 11px 17px;
+  border: none;
+  border-radius: 7px;
+  background: #287ac4;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ventas-boleta-imprimir:hover {
+  background: #174c80;
+}
+
+.ventas-boleta-cabecera {
+  text-align: center;
+  color: #153b67;
+}
+
+.ventas-boleta-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 10px;
+  border-radius: 14px;
+  background: #1765ad;
+  color: #fff;
+  font-size: 29px;
+  font-weight: 800;
+}
+
+.ventas-boleta-cabecera h2 {
+  margin: 0 0 7px;
+  font-size: 23px;
+  letter-spacing: 1px;
+}
+
+.ventas-boleta-cabecera p {
+  margin: 0 0 5px;
+  color: #536b83;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ventas-boleta-cabecera span {
+  color: #8296aa;
+  font-size: 11px;
+}
+
+.ventas-boleta-separador {
+  margin: 22px 0;
+  border-top: 1px dashed #aebdcb;
+}
+
+.ventas-boleta-datos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px 20px;
+  margin-bottom: 22px;
+}
+
+.ventas-boleta-datos p {
+  margin: 0;
+  color: #405a73;
+  font-size: 13px;
+}
+
+.ventas-boleta-tabla-contenedor {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.ventas-boleta-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.ventas-boleta-tabla th {
+  padding: 12px 9px;
+  border-bottom: 2px solid #dce7f2;
+  background: #f3f8fe;
+  color: #426080;
+  font-size: 12px;
+}
+
+.ventas-boleta-tabla td {
+  padding: 12px 9px;
+  border-bottom: 1px solid #edf2f8;
+  color: #405a73;
+  font-size: 12px;
+}
+
+.ventas-boleta-tabla th:not(:first-child),
+.ventas-boleta-tabla td:not(:first-child) {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.ventas-boleta-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 17px 0;
+  border-top: 2px solid #dce7f2;
+  border-bottom: 2px solid #dce7f2;
+}
+
+.ventas-boleta-total span {
+  color: #294663;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.ventas-boleta-total strong {
+  color: #1765ad;
+  font-size: 24px;
+}
+
+.ventas-boleta-pie {
+  margin-top: 27px;
+  text-align: center;
+}
+
+.ventas-boleta-pie p {
+  margin: 0 0 7px;
+  color: #153b67;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.ventas-boleta-pie span {
+  display: block;
+  margin-bottom: 12px;
+  color: #536b83;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ventas-boleta-pie small {
+  display: block;
+  color: #8296aa;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .ventas-boleta {
+    padding: 17px;
+  }
+
+  .ventas-boleta-datos {
+    grid-template-columns: 1fr;
+  }
+
+  .ventas-boleta-cabecera h2 {
+    font-size: 19px;
+  }
+
+  .ventas-boleta-tabla th,
+  .ventas-boleta-tabla td {
+    padding: 9px 5px;
+    font-size: 10px;
+  }
+}
+
+/* Al imprimir, mostrar solamente la boleta */
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  .ventas-boleta-fondo,
+  .ventas-boleta-fondo * {
+    visibility: visible !important;
+  }
+
+  .ventas-boleta-fondo {
+    position: absolute !important;
+    inset: 0 !important;
+    display: block !important;
+    padding: 0 !important;
+    background: #fff !important;
+    z-index: 99999 !important;
+  }
+
+  .ventas-boleta {
+    width: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .ventas-boleta-acciones {
+    display: none !important;
+  }
+
+  .ventas-boleta-tabla-contenedor {
+    overflow: visible !important;
+  }
+
+  .ventas-boleta-tabla {
+    width: 100% !important;
+  }
+}

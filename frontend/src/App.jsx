@@ -67,6 +67,12 @@ function App() {
   const [cargandoLogin, setCargandoLogin] = useState(false)
   const [errorLogin, setErrorLogin] = useState('')
 
+  // Estados para el registro de nuevos usuarios
+  const [modoRegistro, setModoRegistro] = useState(false)
+  const [nombreRegistro, setNombreRegistro] = useState('')
+  const [confirmarContrasena, setConfirmarContrasena] = useState('')
+  const [mensajeRegistro, setMensajeRegistro] = useState('')
+
   const [vista, setVista] = useState('inicio')
   const [menuContraido, setMenuContraido] = useState(false)
 
@@ -101,12 +107,12 @@ function App() {
   const [errorDashboard, setErrorDashboard] = useState('')
 
   const esAdmin = sesion?.usuario?.rol === 'admin'
-
   const nombreRol = esAdmin ? 'Administrador' : 'Trabajador'
 
   async function iniciarSesion(evento) {
     evento.preventDefault()
     setErrorLogin('')
+    setMensajeRegistro('')
 
     if (!correo.trim() || !contrasena) {
       setErrorLogin('Ingresa tu correo y contraseña.')
@@ -163,6 +169,83 @@ function App() {
     }
   }
 
+  async function registrarUsuario(evento) {
+    evento.preventDefault()
+    setErrorLogin('')
+    setMensajeRegistro('')
+
+    if (!nombreRegistro.trim()) {
+      setErrorLogin('Ingresa tu nombre completo.')
+      return
+    }
+
+    if (!correo.trim()) {
+      setErrorLogin('Ingresa tu correo electrónico.')
+      return
+    }
+
+    if (contrasena.length < 8) {
+      setErrorLogin('La contraseña debe tener al menos 8 caracteres.')
+      return
+    }
+
+    if (contrasena !== confirmarContrasena) {
+      setErrorLogin('Las contraseñas no coinciden.')
+      return
+    }
+
+    try {
+      setCargandoLogin(true)
+
+      const respuesta = await fetch(`${API_URL}/api/auth/registro`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nombre: nombreRegistro.trim(),
+          correo: correo.trim(),
+          contrasena,
+        }),
+      })
+
+      const resultado = await respuesta.json().catch(() => ({}))
+
+      if (!respuesta.ok) {
+        throw new Error(
+          resultado.mensaje || 'No se pudo completar el registro.',
+        )
+      }
+
+      setMensajeRegistro(
+        resultado.mensaje || 'Registro exitoso. Ya puedes iniciar sesión.',
+      )
+
+      setModoRegistro(false)
+      setNombreRegistro('')
+      setConfirmarContrasena('')
+      setContrasena('')
+    } catch (error) {
+      setErrorLogin(
+        error.message === 'Failed to fetch'
+          ? 'No se pudo conectar con el servidor. Verifica que el backend esté iniciado.'
+          : error.message,
+      )
+    } finally {
+      setCargandoLogin(false)
+    }
+  }
+
+  function cambiarModoAutenticacion() {
+    setModoRegistro((actual) => !actual)
+    setErrorLogin('')
+    setMensajeRegistro('')
+    setNombreRegistro('')
+    setContrasena('')
+    setConfirmarContrasena('')
+    setMostrarContrasena(false)
+  }
+
   function cerrarSesion() {
     localStorage.removeItem('nova_salud_token')
     localStorage.removeItem('nova_salud_usuario')
@@ -171,7 +254,9 @@ function App() {
     setCorreo('')
     setContrasena('')
     setErrorLogin('')
+    setMensajeRegistro('')
     setErrorDashboard('')
+    setModoRegistro(false)
     setVista('inicio')
     setMenuContraido(false)
   }
@@ -265,12 +350,40 @@ function App() {
               </div>
 
               <div className="form-heading">
-                <span className="form-label">ACCESO AL SISTEMA</span>
-                <h2>¡Hola de nuevo!</h2>
-                <p>Ingresa tus datos para acceder a tu cuenta.</p>
+                <span className="form-label">
+                  {modoRegistro ? 'REGISTRO DE USUARIO' : 'ACCESO AL SISTEMA'}
+                </span>
+
+                <h2>
+                  {modoRegistro ? 'Crea tu cuenta' : '¡Hola de nuevo!'}
+                </h2>
+
+                <p>
+                  {modoRegistro
+                    ? 'Completa tus datos para registrarte en NOVA SALUD.'
+                    : 'Ingresa tus datos para acceder a tu cuenta.'}
+                </p>
               </div>
 
-              <form onSubmit={iniciarSesion}>
+              <form onSubmit={modoRegistro ? registrarUsuario : iniciarSesion}>
+                {modoRegistro && (
+                  <div className="form-group">
+                    <label htmlFor="nombreRegistro">Nombre completo</label>
+                    <input
+                      id="nombreRegistro"
+                      type="text"
+                      placeholder="Tu nombre completo"
+                      value={nombreRegistro}
+                      onChange={(evento) =>
+                        setNombreRegistro(evento.target.value)
+                      }
+                      maxLength={100}
+                      autoComplete="name"
+                      required
+                    />
+                  </div>
+                )}
+
                 <div className="form-group">
                   <label htmlFor="correo">Correo electrónico</label>
                   <input
@@ -279,7 +392,8 @@ function App() {
                     placeholder="ejemplo@novasalud.com"
                     value={correo}
                     onChange={(evento) => setCorreo(evento.target.value)}
-                    autoComplete="username"
+                    autoComplete={modoRegistro ? 'email' : 'username'}
+                    maxLength={150}
                     required
                   />
                 </div>
@@ -290,12 +404,20 @@ function App() {
                     <input
                       id="contrasena"
                       type={mostrarContrasena ? 'text' : 'password'}
-                      placeholder="Ingresa tu contraseña"
+                      placeholder={
+                        modoRegistro
+                          ? 'Crea una contraseña (mínimo 8 caracteres)'
+                          : 'Ingresa tu contraseña'
+                      }
                       value={contrasena}
                       onChange={(evento) => setContrasena(evento.target.value)}
-                      autoComplete="current-password"
+                      autoComplete={
+                        modoRegistro ? 'new-password' : 'current-password'
+                      }
+                      minLength={modoRegistro ? 8 : undefined}
                       required
                     />
+
                     <button
                       className="show-password"
                       type="button"
@@ -308,9 +430,34 @@ function App() {
                   </div>
                 </div>
 
+                {modoRegistro && (
+                  <div className="form-group">
+                    <label htmlFor="confirmarContrasena">
+                      Confirmar contraseña
+                    </label>
+                    <input
+                      id="confirmarContrasena"
+                      type={mostrarContrasena ? 'text' : 'password'}
+                      placeholder="Repite tu contraseña"
+                      value={confirmarContrasena}
+                      onChange={(evento) =>
+                        setConfirmarContrasena(evento.target.value)
+                      }
+                      autoComplete="new-password"
+                      required
+                    />
+                  </div>
+                )}
+
                 {errorLogin && (
                   <div className="error-message" role="alert">
                     {errorLogin}
+                  </div>
+                )}
+
+                {mensajeRegistro && (
+                  <div className="success-message" role="status">
+                    {mensajeRegistro}
                   </div>
                 )}
 
@@ -319,14 +466,36 @@ function App() {
                   type="submit"
                   disabled={cargandoLogin}
                 >
-                  {cargandoLogin ? 'Ingresando...' : 'Iniciar sesión'}
-                  {!cargandoLogin && <span aria-hidden="true">→</span>}
+                  {cargandoLogin
+                    ? modoRegistro
+                      ? 'Registrando...'
+                      : 'Ingresando...'
+                    : modoRegistro
+                      ? 'Crear cuenta'
+                      : 'Iniciar sesión'}
+
+                  {!cargandoLogin && (
+                    <span aria-hidden="true">→</span>
+                  )}
                 </button>
               </form>
 
+              <button
+                className="auth-switch"
+                type="button"
+                onClick={cambiarModoAutenticacion}
+                disabled={cargandoLogin}
+              >
+                {modoRegistro
+                  ? '¿Ya tienes una cuenta? Inicia sesión'
+                  : '¿No tienes una cuenta? Regístrate'}
+              </button>
+
               <div className="form-footer">
-                <span className="security-icon">●</span>
-                Acceso seguro mediante autenticación
+                <span className="security-icon">◉</span>
+                {modoRegistro
+                  ? 'Registro seguro de usuarios'
+                  : 'Acceso seguro mediante autenticación'}
               </div>
             </div>
 

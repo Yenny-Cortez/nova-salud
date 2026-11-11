@@ -34,6 +34,7 @@ function Ventas({ token, onCambio }) {
   const [mensaje, setMensaje] = useState('')
   const [ventaSeleccionada, setVentaSeleccionada] = useState(null)
   const [cargandoDetalle, setCargandoDetalle] = useState(false)
+  const [boleta, setBoleta] = useState(null)
 
   async function consultarAPI(ruta, opciones = {}) {
     const respuesta = await fetch(`${API_URL}${ruta}`, {
@@ -188,6 +189,7 @@ function Ventas({ token, onCambio }) {
     setGuardando(true)
     setError('')
     setMensaje('')
+    setBoleta(null)
 
     try {
       const resultado = await consultarAPI('/api/ventas', {
@@ -203,6 +205,11 @@ function Ventas({ token, onCambio }) {
       setMensaje(
         `¡Venta #${resultado.venta.id} registrada correctamente! Total: ${formatoMoneda(resultado.venta.total)}`,
       )
+
+      setBoleta({
+        venta: resultado.venta,
+        detalles: resultado.venta.detalles || [],
+      })
 
       setCarrito([])
       setBusqueda('')
@@ -523,6 +530,95 @@ function Ventas({ token, onCambio }) {
                 </div>
               </>
             ) : null}
+          </section>
+        </div>
+      )}
+
+      {boleta && (
+        <div className="ventas-modal-fondo ventas-boleta-fondo">
+          <section
+            className="ventas-modal ventas-boleta"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="titulo-boleta"
+          >
+            <div className="ventas-boleta-acciones">
+              <button
+                type="button"
+                className="ventas-boleta-imprimir"
+                onClick={() => window.print()}
+              >
+                Imprimir / Guardar PDF
+              </button>
+
+              <button
+                type="button"
+                className="ventas-modal-cerrar"
+                onClick={() => setBoleta(null)}
+                aria-label="Cerrar boleta"
+              >
+                ×
+              </button>
+            </div>
+
+            <header className="ventas-boleta-cabecera">
+              <div className="ventas-boleta-logo">N</div>
+              <h2 id="titulo-boleta">BOTICA NOVA SALUD</h2>
+              <p>Comprobante interno de venta</p>
+              <span>Documento de control interno</span>
+            </header>
+
+            <div className="ventas-boleta-separador" />
+
+            <div className="ventas-boleta-datos">
+              <p>
+                <strong>N.º de venta:</strong> #{boleta.venta.id}
+              </p>
+              <p>
+                <strong>Fecha:</strong> {formatoFecha(boleta.venta.fecha)}
+              </p>
+              <p>
+                <strong>Atendido por:</strong>{' '}
+                {boleta.venta.vendedor || 'Usuario'}
+              </p>
+            </div>
+
+            <div className="ventas-boleta-tabla-contenedor">
+              <table className="ventas-boleta-tabla">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Cant.</th>
+                    <th>Precio</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {boleta.detalles.map((detalle, indice) => (
+                    <tr key={`${detalle.producto_id}-${indice}`}>
+                      <td>{detalle.nombre}</td>
+                      <td>{detalle.cantidad}</td>
+                      <td>{formatoMoneda(detalle.precio_unitario)}</td>
+                      <td>{formatoMoneda(detalle.subtotal)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="ventas-boleta-total">
+              <span>TOTAL</span>
+              <strong>{formatoMoneda(boleta.venta.total)}</strong>
+            </div>
+
+            <footer className="ventas-boleta-pie">
+              <p>¡Gracias por tu compra!</p>
+              <span>BOTICA NOVA SALUD</span>
+              <small>
+                Este documento es un comprobante interno y no reemplaza una
+                boleta electrónica autorizada por SUNAT.
+              </small>
+            </footer>
           </section>
         </div>
       )}

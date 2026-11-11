@@ -1699,3 +1699,38 @@ button:disabled {
     transition-duration: 0.01ms !important;
   }
 }
+
+
+.auth-switch {
+  display: block;
+  width: 100%;
+  margin-top: 18px;
+  padding: 8px;
+  color: #287ac4;
+  background: transparent;
+  border: 0;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-switch:hover:not(:disabled) {
+  color: #174c80;
+  text-decoration: underline;
+}
+
+.auth-switch:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.success-message {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  color: #176b43;
+  background: #eaf8f0;
+  border: 1px solid #bfe8d0;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+}
