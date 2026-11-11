@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import Productos from './Productos'
+import Categorias from './Categorias'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
@@ -355,6 +356,14 @@ function App() {
             <span>▣</span> Productos
           </button>
 
+          <button
+  type="button"
+  className={`nav-link ${vista === 'categorias' ? 'active' : ''}`}
+  onClick={() => setVista('categorias')}
+>
+  <span>▤</span> Categorías
+</button>
+
           <a
             className="nav-link"
             href="#alertas"
@@ -398,13 +407,19 @@ function App() {
       </aside>
 
       <section className="dashboard-content" id="inicio">
-        {vista === 'productos' ? (
-          <Productos
-            token={sesion.token}
-            categorias={datos.categorias}
-            esAdmin={sesion.usuario.rol === 'admin'}
-          />
-        ) : (
+        {vista === 'categorias' ? (
+  <Categorias
+    token={sesion.token}
+    esAdmin={sesion.usuario.rol === 'admin'}
+    onCambio={cargarDashboard}
+  />
+) : vista === 'productos' ? (
+  <Productos
+    token={sesion.token}
+    categorias={datos.categorias}
+    esAdmin={sesion.usuario.rol === 'admin'}
+  />
+) : (
           <>
             <header className="dashboard-header">
               <div>
