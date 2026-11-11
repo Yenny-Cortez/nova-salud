@@ -1,7 +1,7 @@
 
 .categorias-contenedor {
   width: 100%;
-  color: #243b35;
+  color: #294663;
 }
 
 .categorias-encabezado {
@@ -15,21 +15,21 @@
 .categorias-encabezado h2 {
   margin: 0 0 7px;
   font-size: 25px;
-  color: #174b3d;
+  color: #153b67;
 }
 
 .categorias-encabezado p {
   margin: 0;
-  color: #71817b;
+  color: #778ba1;
   font-size: 14px;
 }
 
 .categorias-tarjeta {
   background: #ffffff;
-  border: 1px solid #e4ece8;
+  border: 1px solid #e1eaf4;
   border-radius: 12px;
   padding: 22px;
-  box-shadow: 0 3px 12px rgba(25, 70, 55, 0.05);
+  box-shadow: 0 3px 12px rgba(21, 59, 103, 0.05);
 }
 
 .categorias-resumen {
@@ -39,13 +39,13 @@
   gap: 12px;
   padding-bottom: 18px;
   margin-bottom: 18px;
-  border-bottom: 1px solid #edf1ef;
-  color: #63766e;
+  border-bottom: 1px solid #edf2f8;
+  color: #647b91;
   font-size: 14px;
 }
 
 .categorias-resumen strong {
-  color: #16734f;
+  color: #287ac4;
   font-size: 25px;
 }
 
@@ -62,29 +62,29 @@
 
 .categorias-tabla th {
   padding: 13px 12px;
-  background: #f2f8f5;
-  color: #426457;
+  background: #f3f8fe;
+  color: #426080;
   font-size: 13px;
   font-weight: 600;
 }
 
 .categorias-tabla td {
   padding: 15px 12px;
-  border-bottom: 1px solid #edf1ef;
-  color: #40534b;
+  border-bottom: 1px solid #edf2f8;
+  color: #405a73;
   font-size: 14px;
 }
 
 .categorias-tabla tbody tr:hover {
-  background: #f9fcfa;
+  background: #f8fbff;
 }
 
 .categoria-estado-activo {
   display: inline-block;
   padding: 5px 10px;
   border-radius: 20px;
-  background: #e5f5eb;
-  color: #247344;
+  background: #e7f1fc;
+  color: #1765ad;
   font-size: 12px;
   font-weight: 600;
 }
@@ -109,21 +109,21 @@
 }
 
 .categoria-boton-principal {
-  background: #168052;
+  background: #287ac4;
   color: #ffffff;
 }
 
 .categoria-boton-principal:hover {
-  background: #106941;
+  background: #174c80;
 }
 
 .categoria-boton-editar {
-  background: #e7f1fb;
+  background: #eaf3fc;
   color: #28649b;
 }
 
 .categoria-boton-editar:hover {
-  background: #d4e6f7;
+  background: #d5e7f8;
 }
 
 .categoria-boton-eliminar {
@@ -136,18 +136,18 @@
 }
 
 .categoria-boton-cancelar {
-  background: #edf1ef;
-  color: #52645b;
+  background: #edf2f8;
+  color: #52677d;
 }
 
 .categoria-boton-cancelar:hover {
-  background: #dfe7e2;
+  background: #dfe8f2;
 }
 
 .categorias-estado {
   padding: 25px 10px;
   text-align: center;
-  color: #71817b;
+  color: #778ba1;
   font-size: 14px;
 }
 
@@ -169,7 +169,7 @@
   justify-content: center;
   align-items: center;
   padding: 20px;
-  background: rgba(15, 35, 28, 0.55);
+  background: rgba(16, 43, 80, 0.55);
 }
 
 .categoria-modal {
@@ -183,7 +183,7 @@
 
 .categoria-modal h3 {
   margin: 0 0 22px;
-  color: #174b3d;
+  color: #153b67;
   font-size: 21px;
 }
 
@@ -194,7 +194,7 @@
 }
 
 .categoria-modal label {
-  color: #40534b;
+  color: #405a73;
   font-size: 13px;
   font-weight: 600;
 }
@@ -203,15 +203,15 @@
   width: 100%;
   box-sizing: border-box;
   padding: 12px;
-  border: 1px solid #d7e2dc;
+  border: 1px solid #dce7f2;
   border-radius: 7px;
   outline: none;
   font-size: 14px;
 }
 
 .categoria-modal input:focus {
-  border-color: #168052;
-  box-shadow: 0 0 0 3px rgba(22, 128, 82, 0.1);
+  border-color: #287ac4;
+  box-shadow: 0 0 0 3px rgba(40, 122, 196, 0.1);
 }
 
 .categoria-modal-acciones {

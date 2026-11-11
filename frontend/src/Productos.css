@@ -13,13 +13,13 @@
 
 .productos-header h1 {
   margin: 9px 0 5px;
-  color: #183c2e;
+  color: #153b67;
   font-size: 30px;
 }
 
 .productos-header p {
   margin: 0;
-  color: #849188;
+  color: #778ba1;
   font-size: 13px;
 }
 
@@ -38,17 +38,17 @@
 
 .producto-primary-button {
   color: white;
-  background: #19734e;
+  background: #287ac4;
 }
 
 .producto-primary-button:hover {
-  background: #125b3d;
+  background: #174c80;
 }
 
 .producto-secondary-button {
-  color: #176b4b;
-  background: #edf6f0;
-  border: 1px solid #dce8e0;
+  color: #1e65a8;
+  background: #eaf3fc;
+  border: 1px solid #d5e5f5;
 }
 
 .producto-secondary-button:disabled,
@@ -71,9 +71,9 @@
   width: 100%;
   min-width: 0;
   padding: 12px 13px;
-  color: #29483a;
+  color: #294663;
   background: #fff;
-  border: 1px solid #dce7e0;
+  border: 1px solid #dce7f2;
   border-radius: 8px;
   outline: none;
   font: inherit;
@@ -89,8 +89,8 @@
 .producto-form-grid input:focus,
 .producto-form-grid select:focus,
 .producto-form-grid textarea:focus {
-  border-color: #23875c;
-  box-shadow: 0 0 0 3px rgba(35, 135, 92, 0.1);
+  border-color: #287ac4;
+  box-shadow: 0 0 0 3px rgba(40, 122, 196, 0.1);
 }
 
 .productos-resumen {
@@ -98,21 +98,21 @@
   align-items: center;
   gap: 7px;
   margin-bottom: 12px;
-  color: #849188;
+  color: #778ba1;
   font-size: 12px;
 }
 
 .productos-resumen strong {
-  color: #19734e;
+  color: #287ac4;
   font-size: 15px;
 }
 
 .productos-table-card {
   overflow: hidden;
   background: #fff;
-  border: 1px solid #e8eee9;
+  border: 1px solid #e1eaf4;
   border-radius: 13px;
-  box-shadow: 0 5px 18px rgba(24, 66, 49, 0.035);
+  box-shadow: 0 5px 18px rgba(21, 59, 103, 0.035);
 }
 
 .productos-table-scroll {
@@ -129,17 +129,17 @@
 
 .productos-table th {
   padding: 15px 13px;
-  color: #87958c;
-  background: #f9fbf9;
-  border-bottom: 1px solid #edf1ee;
+  color: #778ba1;
+  background: #f3f8fe;
+  border-bottom: 1px solid #e1eaf4;
   font-size: 10px;
   font-weight: 800;
 }
 
 .productos-table td {
   padding: 15px 13px;
-  color: #64756a;
-  border-bottom: 1px solid #f0f3f1;
+  color: #647b91;
+  border-bottom: 1px solid #edf2f8;
   font-size: 11px;
 }
 
@@ -149,7 +149,7 @@
 
 .productos-table td strong {
   display: block;
-  color: #334c3d;
+  color: #294663;
 }
 
 .productos-table td small {
@@ -157,15 +157,15 @@
   max-width: 180px;
   margin-top: 4px;
   overflow: hidden;
-  color: #9aa59e;
+  color: #91a2b3;
   text-overflow: ellipsis;
 }
 
 .producto-stock {
   display: inline-block;
   padding: 5px 9px;
-  color: #19734e;
-  background: #e4f3e9;
+  color: #1765ad;
+  background: #e7f1fc;
   border-radius: 20px;
   font-weight: 800;
 }
@@ -182,8 +182,8 @@
 
 .producto-edit-button {
   padding: 7px 9px;
-  color: #276b9a;
-  background: #eaf2f8;
+  color: #1e65a8;
+  background: #eaf3fc;
 }
 
 .producto-delete-button {
@@ -194,7 +194,7 @@
 
 .productos-empty {
   padding: 45px 15px;
-  color: #9aa59e;
+  color: #91a2b3;
   font-size: 13px;
   text-align: center;
 }
@@ -208,9 +208,9 @@
 }
 
 .producto-success {
-  color: #176b4b;
-  background: #eaf5ed;
-  border: 1px solid #d4eadd;
+  color: #1765ad;
+  background: #eaf3fc;
+  border: 1px solid #d5e5f5;
 }
 
 .producto-error {
@@ -228,7 +228,7 @@
   justify-content: center;
   overflow-y: auto;
   padding: 20px;
-  background: rgba(12, 35, 25, 0.55);
+  background: rgba(16, 43, 80, 0.55);
 }
 
 .producto-modal {
@@ -251,15 +251,15 @@
 
 .producto-modal-header h2 {
   margin: 8px 0 0;
-  color: #183c2e;
+  color: #153b67;
   font-size: 22px;
 }
 
 .producto-close-button {
   width: 35px;
   height: 35px;
-  color: #64756a;
-  background: #f1f5f2;
+  color: #647b91;
+  background: #f0f5fa;
   border: 0;
   border-radius: 50%;
   font-size: 24px;
@@ -276,7 +276,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  color: #29483a;
+  color: #294663;
   font-size: 12px;
   font-weight: 700;
 }
@@ -295,7 +295,7 @@
   gap: 10px;
   margin-top: 25px;
   padding-top: 18px;
-  border-top: 1px solid #edf1ee;
+  border-top: 1px solid #e1eaf4;
 }
 
 @media (max-width: 650px) {

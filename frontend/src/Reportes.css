@@ -8,13 +8,13 @@
 
 .reports-heading h2 {
   margin: 0 0 6px;
-  color: #183b35;
+  color: var(--nova-text, #183b60);
   font-size: 25px;
 }
 
 .reports-heading p {
   margin: 0;
-  color: #71817c;
+  color: var(--nova-muted, #778ba1);
   font-size: 14px;
 }
 
@@ -25,7 +25,7 @@
   gap: 14px;
   padding: 18px;
   background: #ffffff;
-  border: 1px solid #e5eeea;
+  border: 1px solid var(--nova-border, #e1eaf4);
   border-radius: 12px;
 }
 
@@ -36,7 +36,7 @@
 }
 
 .reports-field label {
-  color: #425b53;
+  color: var(--nova-text, #183b60);
   font-size: 13px;
   font-weight: 600;
 }
@@ -44,10 +44,15 @@
 .reports-field input {
   min-height: 40px;
   padding: 8px 10px;
-  border: 1px solid #d5e1dc;
+  border: 1px solid #d5e1ee;
   border-radius: 7px;
-  color: #263d35;
+  color: #263d55;
   font: inherit;
+}
+
+.reports-field input:focus {
+  outline: 2px solid #c5def7;
+  border-color: var(--nova-primary, #1765ad);
 }
 
 .reports-button {
@@ -55,14 +60,15 @@
   padding: 9px 18px;
   border: none;
   border-radius: 7px;
-  background: #16866b;
+  background: var(--nova-primary, #1765ad);
   color: white;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
 
 .reports-button:hover {
-  background: #106d57;
+  background: var(--nova-primary-dark, #104b83);
 }
 
 .reports-button:disabled {
@@ -81,7 +87,7 @@
 .reports-message,
 .reports-empty {
   padding: 12px 0;
-  color: #788780;
+  color: var(--nova-muted, #778ba1);
   font-size: 14px;
 }
 
@@ -96,32 +102,34 @@
   flex-direction: column;
   gap: 12px;
   padding: 20px;
-  border: 1px solid #e5eeea;
+  border: 1px solid var(--nova-border, #e1eaf4);
   border-radius: 12px;
   background: #ffffff;
+  box-shadow: 0 3px 12px rgba(20, 60, 100, 0.04);
 }
 
 .reports-summary-card span {
-  color: #71817c;
+  color: var(--nova-muted, #778ba1);
   font-size: 13px;
 }
 
 .reports-summary-card strong {
-  color: #16785f;
+  color: var(--nova-primary, #1765ad);
   font-size: 25px;
 }
 
 .reports-panel {
   min-width: 0;
   padding: 20px;
-  border: 1px solid #e5eeea;
+  border: 1px solid var(--nova-border, #e1eaf4);
   border-radius: 12px;
   background: #ffffff;
+  box-shadow: 0 3px 12px rgba(20, 60, 100, 0.04);
 }
 
 .reports-panel h3 {
   margin: 0 0 16px;
-  color: #25463c;
+  color: var(--nova-text, #183b60);
   font-size: 17px;
 }
 
@@ -139,19 +147,19 @@
 .reports-table th,
 .reports-table td {
   padding: 12px 14px;
-  border-bottom: 1px solid #edf1ef;
+  border-bottom: 1px solid #eaf0f6;
   white-space: nowrap;
   font-size: 13px;
 }
 
 .reports-table th {
-  background: #f5f9f7;
-  color: #52675e;
+  background: #f0f6fc;
+  color: #315778;
   font-weight: 600;
 }
 
 .reports-table td {
-  color: #354b42;
+  color: #354b62;
 }
 
 .reports-stock-warning {

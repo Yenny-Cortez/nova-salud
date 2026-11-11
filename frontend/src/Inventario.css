@@ -16,14 +16,14 @@
 
 .inventario-encabezado h2 {
   margin: 0 0 6px;
-  color: #183b35;
+  color: var(--nova-text, #183b60);
   font-size: 25px;
 }
 
 .inventario-encabezado p,
 .inventario-panel > p {
   margin: 0;
-  color: #71817c;
+  color: var(--nova-muted, #778ba1);
 }
 
 .inventario-btn-actualizar,
@@ -31,20 +31,23 @@
   border: none;
   border-radius: 8px;
   padding: 11px 18px;
-  background: #187b65;
+  background: var(--nova-primary, #1765ad);
   color: white;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .inventario-btn-actualizar:hover,
 .inventario-formulario button:hover {
-  background: #12634f;
+  background: var(--nova-primary-dark, #104b83);
+  transform: translateY(-1px);
 }
 
 .inventario button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 .inventario-resumen {
@@ -56,10 +59,10 @@
 .inventario-tarjeta,
 .inventario-panel {
   background: white;
-  border: 1px solid #e5ece9;
+  border: 1px solid var(--nova-border, #e1eaf4);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 3px 12px rgba(20, 60, 48, 0.04);
+  box-shadow: 0 3px 12px rgba(20, 60, 100, 0.04);
 }
 
 .inventario-tarjeta {
@@ -69,18 +72,18 @@
 }
 
 .inventario-tarjeta span {
-  color: #71817c;
+  color: var(--nova-muted, #778ba1);
   font-size: 14px;
 }
 
 .inventario-tarjeta strong {
-  color: #187b65;
+  color: var(--nova-primary, #1765ad);
   font-size: 30px;
 }
 
 .inventario-panel h3 {
   margin: 0 0 10px;
-  color: #183b35;
+  color: var(--nova-text, #183b60);
   font-size: 18px;
 }
 
@@ -99,7 +102,7 @@
 }
 
 .inventario-campo label {
-  color: #42564f;
+  color: var(--nova-text, #183b60);
   font-size: 13px;
   font-weight: 600;
 }
@@ -109,17 +112,18 @@
   width: 100%;
   min-height: 42px;
   padding: 9px 11px;
-  border: 1px solid #d5e0db;
+  border: 1px solid #d5e1ee;
   border-radius: 7px;
   background: white;
-  color: #263d35;
+  color: #263d55;
   font: inherit;
+  box-sizing: border-box;
 }
 
 .inventario-campo input:focus,
 .inventario-campo select:focus {
-  outline: 2px solid #a4d9c8;
-  border-color: #187b65;
+  outline: 2px solid #c5def7;
+  border-color: var(--nova-primary, #1765ad);
 }
 
 .inventario-alerta {
@@ -156,18 +160,18 @@
 .inventario-tabla th,
 .inventario-tabla td {
   padding: 13px 12px;
-  border-bottom: 1px solid #edf1ef;
+  border-bottom: 1px solid #eaf0f6;
   font-size: 13px;
 }
 
 .inventario-tabla th {
-  background: #f5f8f6;
-  color: #52665e;
+  background: #f0f6fc;
+  color: #315778;
   font-weight: 700;
 }
 
 .inventario-tabla td {
-  color: #344b42;
+  color: #344b62;
 }
 
 .inventario-estado-bajo {
@@ -201,7 +205,7 @@
 
 .inventario-vacio {
   padding: 15px 0;
-  color: #71817c;
+  color: var(--nova-muted, #778ba1);
   font-size: 14px;
 }
 

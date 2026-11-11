@@ -60,6 +60,7 @@ function App() {
   const [errorLogin, setErrorLogin] = useState('')
 
   const [vista, setVista] = useState('inicio')
+  const [menuContraido, setMenuContraido] = useState(false)
 
   const [sesion, setSesion] = useState(() => {
     const token = localStorage.getItem('nova_salud_token')
@@ -160,6 +161,7 @@ function App() {
     setErrorLogin('')
     setErrorDashboard('')
     setVista('inicio')
+    setMenuContraido(false)
   }
 
   async function cargarDashboard() {
@@ -329,67 +331,54 @@ function App() {
   const ventasRecientes = datos.ventas.slice(0, 5)
   const movimientosRecientes = datos.movimientos.slice(0, 5)
 
+  const opcionesMenu = [
+    { id: 'inicio', icono: '▦', texto: 'Inicio' },
+    { id: 'productos', icono: '▣', texto: 'Productos' },
+    { id: 'categorias', icono: '▤', texto: 'Categorías' },
+    { id: 'ventas', icono: '▧', texto: 'Ventas' },
+    { id: 'inventario', icono: '▥', texto: 'Inventario' },
+    { id: 'reportes', icono: '▨', texto: 'Reportes' },
+  ]
+
   return (
-    <main className="dashboard-page">
+    <main className={`dashboard-page ${menuContraido ? 'menu-contraido' : ''}`}>
       <aside className="sidebar">
         <div className="sidebar-brand">
-          <div className="sidebar-logo">+</div>
-          <div>
-            <strong>NOVA SALUD</strong>
-            <span>Gestión de farmacia</span>
+          <div className="sidebar-brand-main">
+            <div className="sidebar-logo">+</div>
+            <div className="sidebar-brand-text">
+              <strong>NOVA SALUD</strong>
+              <span>Gestión de farmacia</span>
+            </div>
           </div>
+
+          <button
+            type="button"
+            className="sidebar-toggle"
+            onClick={() => setMenuContraido((actual) => !actual)}
+            aria-label={menuContraido ? 'Expandir menú' : 'Contraer menú'}
+            title={menuContraido ? 'Expandir menú' : 'Contraer menú'}
+          >
+            {menuContraido ? '☰' : '‹'}
+          </button>
         </div>
 
         <p className="sidebar-label">MENÚ PRINCIPAL</p>
 
         <nav className="sidebar-nav">
-          <button
-            type="button"
-            className={`nav-link ${vista === 'inicio' ? 'active' : ''}`}
-            onClick={() => setVista('inicio')}
-          >
-            <span>▦</span> Inicio
-          </button>
-
-          <button
-            type="button"
-            className={`nav-link ${vista === 'productos' ? 'active' : ''}`}
-            onClick={() => setVista('productos')}
-          >
-            <span>▣</span> Productos
-          </button>
-
-          <button
-            type="button"
-            className={`nav-link ${vista === 'categorias' ? 'active' : ''}`}
-            onClick={() => setVista('categorias')}
-          >
-            <span>▤</span> Categorías
-          </button>
-
-          <button
-            type="button"
-            className={`nav-link ${vista === 'ventas' ? 'active' : ''}`}
-            onClick={() => setVista('ventas')}
-          >
-            <span>▤</span> Ventas
-          </button>
-
-          <button
-            type="button"
-            className={`nav-link ${vista === 'inventario' ? 'active' : ''}`}
-            onClick={() => setVista('inventario')}
-          >
-            <span>▥</span> Inventario
-          </button>
-
-          <button
-            type="button"
-            className={`nav-link ${vista === 'reportes' ? 'active' : ''}`}
-            onClick={() => setVista('reportes')}
-          >
-            <span>▧</span> Reportes
-          </button>
+          {opcionesMenu.map((opcion) => (
+            <button
+              key={opcion.id}
+              type="button"
+              className={`nav-link ${vista === opcion.id ? 'active' : ''}`}
+              onClick={() => setVista(opcion.id)}
+              title={opcion.texto}
+              aria-label={opcion.texto}
+            >
+              <span className="nav-icon">{opcion.icono}</span>
+              <span className="nav-text">{opcion.texto}</span>
+            </button>
+          ))}
         </nav>
 
         <div className="sidebar-bottom">
@@ -407,8 +396,10 @@ function App() {
             type="button"
             className="sidebar-logout"
             onClick={cerrarSesion}
+            title="Cerrar sesión"
           >
-            Cerrar sesión
+            <span>↪</span>
+            <span className="logout-text">Cerrar sesión</span>
           </button>
         </div>
       </aside>

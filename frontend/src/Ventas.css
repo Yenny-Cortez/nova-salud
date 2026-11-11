@@ -1,7 +1,7 @@
 
 .ventas-contenedor {
   width: 100%;
-  color: #243b35;
+  color: #294663;
 }
 
 .ventas-encabezado {
@@ -14,14 +14,14 @@
 
 .ventas-encabezado h2 {
   margin: 0 0 7px;
-  color: #174b3d;
+  color: #153b67;
   font-size: 25px;
 }
 
 .ventas-encabezado p,
 .ventas-panel-encabezado p {
   margin: 0;
-  color: #71817b;
+  color: #778ba1;
   font-size: 14px;
 }
 
@@ -37,12 +37,12 @@
 }
 
 .ventas-boton-actualizar {
-  background: #e7f1eb;
-  color: #176b49;
+  background: #eaf3fc;
+  color: #1765ad;
 }
 
 .ventas-boton-actualizar:hover {
-  background: #d7eadd;
+  background: #d5e7f8;
 }
 
 .ventas-boton-actualizar:disabled,
@@ -62,10 +62,10 @@
 .ventas-panel {
   min-width: 0;
   padding: 21px;
-  border: 1px solid #e4ece8;
+  border: 1px solid #e1eaf4;
   border-radius: 12px;
   background: #ffffff;
-  box-shadow: 0 3px 12px rgba(25, 70, 55, 0.05);
+  box-shadow: 0 3px 12px rgba(21, 59, 103, 0.05);
 }
 
 .ventas-panel-encabezado {
@@ -78,7 +78,7 @@
 
 .ventas-panel-encabezado h3 {
   margin: 0 0 6px;
-  color: #174b3d;
+  color: #153b67;
   font-size: 18px;
 }
 
@@ -86,8 +86,8 @@
   flex-shrink: 0;
   padding: 6px 10px;
   border-radius: 20px;
-  background: #edf6f0;
-  color: #26734e;
+  background: #eaf3fc;
+  color: #1765ad;
   font-size: 12px;
   font-weight: 600;
 }
@@ -97,15 +97,15 @@
   width: 100%;
   margin-bottom: 13px;
   padding: 11px 13px;
-  border: 1px solid #d7e2dc;
+  border: 1px solid #dce7f2;
   border-radius: 7px;
   outline: none;
   font-size: 14px;
 }
 
 .ventas-busqueda:focus {
-  border-color: #168052;
-  box-shadow: 0 0 0 3px rgba(22, 128, 82, 0.1);
+  border-color: #287ac4;
+  box-shadow: 0 0 0 3px rgba(40, 122, 196, 0.1);
 }
 
 .ventas-lista-productos {
@@ -121,7 +121,7 @@
   align-items: center;
   gap: 12px;
   padding: 14px 0;
-  border-bottom: 1px solid #edf1ef;
+  border-bottom: 1px solid #edf2f8;
 }
 
 .ventas-producto-info,
@@ -134,29 +134,29 @@
 
 .ventas-producto-info strong,
 .ventas-carrito-info strong {
-  color: #304c40;
+  color: #294663;
   font-size: 14px;
 }
 
 .ventas-producto-info span,
 .ventas-carrito-info span {
-  color: #829089;
+  color: #8296aa;
   font-size: 12px;
 }
 
 .ventas-producto-info b {
-  color: #168052;
+  color: #1765ad;
   font-size: 14px;
 }
 
 .ventas-boton-agregar {
   flex-shrink: 0;
-  background: #168052;
+  background: #287ac4;
   color: #ffffff;
 }
 
 .ventas-boton-agregar:hover {
-  background: #106941;
+  background: #174c80;
 }
 
 .ventas-carrito-panel {
@@ -178,7 +178,7 @@
   align-items: center;
   gap: 10px;
   padding-bottom: 13px;
-  border-bottom: 1px solid #edf1ef;
+  border-bottom: 1px solid #edf2f8;
 }
 
 .ventas-cantidad {
@@ -192,8 +192,8 @@
   height: 27px;
   border: none;
   border-radius: 6px;
-  background: #eaf3ed;
-  color: #176b49;
+  background: #eaf3fc;
+  color: #1765ad;
   font-size: 17px;
   cursor: pointer;
 }
@@ -211,7 +211,7 @@
 }
 
 .ventas-subtotal {
-  color: #176b49;
+  color: #1765ad;
   font-size: 13px;
   white-space: nowrap;
 }
@@ -231,17 +231,17 @@
   gap: 12px;
   margin-top: 18px;
   padding-top: 16px;
-  border-top: 1px solid #e8efeb;
+  border-top: 1px solid #e1eaf4;
 }
 
 .ventas-total span {
-  color: #536b60;
+  color: #536b83;
   font-size: 14px;
   font-weight: 600;
 }
 
 .ventas-total strong {
-  color: #16734f;
+  color: #1765ad;
   font-size: 22px;
 }
 
@@ -251,7 +251,7 @@
   padding: 13px;
   border: none;
   border-radius: 8px;
-  background: #168052;
+  background: #287ac4;
   color: #ffffff;
   font-size: 14px;
   font-weight: 700;
@@ -259,12 +259,12 @@
 }
 
 .ventas-boton-confirmar:hover:not(:disabled) {
-  background: #106941;
+  background: #174c80;
 }
 
 .ventas-estado {
   padding: 22px 10px;
-  color: #71817b;
+  color: #778ba1;
   font-size: 14px;
   text-align: center;
 }
@@ -286,8 +286,8 @@
 
 .ventas-tabla th {
   padding: 13px 12px;
-  background: #f2f8f5;
-  color: #426457;
+  background: #f3f8fe;
+  color: #426080;
   font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
@@ -295,27 +295,27 @@
 
 .ventas-tabla td {
   padding: 14px 12px;
-  border-bottom: 1px solid #edf1ef;
-  color: #40534b;
+  border-bottom: 1px solid #edf2f8;
+  color: #405a73;
   font-size: 13px;
 }
 
 .ventas-tabla tbody tr:hover {
-  background: #f9fcfa;
+  background: #f8fbff;
 }
 
 .ventas-tabla-total {
-  color: #16734f !important;
+  color: #1765ad !important;
   font-weight: 700;
 }
 
 .ventas-boton-detalle {
-  background: #e7f1fb;
+  background: #eaf3fc;
   color: #28649b;
 }
 
 .ventas-boton-detalle:hover {
-  background: #d4e6f7;
+  background: #d5e7f8;
 }
 
 .ventas-mensaje-error,
@@ -333,9 +333,9 @@
 }
 
 .ventas-mensaje-exito {
-  border: 1px solid #c9e8d4;
-  background: #effaf2;
-  color: #247344;
+  border: 1px solid #d5e5f5;
+  background: #eaf3fc;
+  color: #1765ad;
 }
 
 .ventas-modal-fondo {
@@ -346,7 +346,7 @@
   justify-content: center;
   align-items: center;
   padding: 20px;
-  background: rgba(15, 35, 28, 0.55);
+  background: rgba(16, 43, 80, 0.55);
 }
 
 .ventas-modal {
@@ -369,20 +369,20 @@
 
 .ventas-modal-encabezado h3 {
   margin: 0;
-  color: #174b3d;
+  color: #153b67;
   font-size: 20px;
 }
 
 .ventas-modal-cerrar {
   border: none;
   background: transparent;
-  color: #71817b;
+  color: #778ba1;
   font-size: 26px;
   cursor: pointer;
 }
 
 .ventas-modal > p {
-  color: #536b60;
+  color: #536b83;
   font-size: 14px;
 }
 
