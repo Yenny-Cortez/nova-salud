@@ -36,7 +36,7 @@ export default function Inventario({ token, esAdmin, onCambio }) {
       }
     });
 
-    const datos = await respuesta.json();
+    const datos = await respuesta.json().catch(() => ({}));
 
     if (!respuesta.ok) {
       throw new Error(datos.mensaje || 'Error al consultar los datos');
@@ -50,16 +50,35 @@ export default function Inventario({ token, esAdmin, onCambio }) {
     setError('');
 
     try {
-      const [datosAlertas, datosMovimientos, datosProductos] =
-        await Promise.all([
-          consultar('/api/inventario/alertas'),
-          consultar('/api/inventario/movimientos'),
-          consultar('/api/productos')
-        ]);
+      const [
+        datosAlertas,
+        datosMovimientos,
+        datosProductos
+      ] = await Promise.all([
+        consultar('/api/inventario/alertas'),
+        esAdmin
+          ? consultar('/api/inventario/movimientos')
+          : Promise.resolve([]),
+        consultar('/api/productos')
+      ]);
 
-      setAlertas(datosAlertas.productos || []);
-      setMovimientos(datosMovimientos);
-      setProductos(datosProductos.filter((producto) => producto.activo !== false));
+      setAlertas(
+        Array.isArray(datosAlertas.productos)
+          ? datosAlertas.productos
+          : []
+      );
+
+      setMovimientos(
+        esAdmin && Array.isArray(datosMovimientos)
+          ? datosMovimientos
+          : []
+      );
+
+      setProductos(
+        Array.isArray(datosProductos)
+          ? datosProductos.filter((producto) => producto.activo !== false)
+          : []
+      );
     } catch (err) {
       setError(err.message);
     } finally {
@@ -74,7 +93,7 @@ export default function Inventario({ token, esAdmin, onCambio }) {
 
     return () => clearTimeout(temporizador);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, [token, esAdmin]);
 
   function cambiarCampo(evento) {
     const { name, value } = evento.target;
@@ -87,6 +106,11 @@ export default function Inventario({ token, esAdmin, onCambio }) {
 
   async function registrarMovimiento(evento) {
     evento.preventDefault();
+
+    if (!esAdmin) {
+      setError('No tienes permiso para registrar movimientos.');
+      return;
+    }
 
     setError('');
     setMensaje('');
@@ -119,7 +143,7 @@ export default function Inventario({ token, esAdmin, onCambio }) {
         })
       });
 
-      const datos = await respuesta.json();
+      const datos = await respuesta.json().catch(() => ({}));
 
       if (!respuesta.ok) {
         throw new Error(datos.mensaje || 'No se pudo registrar el movimiento');
@@ -172,10 +196,12 @@ export default function Inventario({ token, esAdmin, onCambio }) {
           <strong>{alertas.length}</strong>
         </article>
 
-        <article className="inventario-tarjeta">
-          <span>Movimientos registrados</span>
-          <strong>{movimientos.length}</strong>
-        </article>
+        {esAdmin && (
+          <article className="inventario-tarjeta">
+            <span>Movimientos registrados</span>
+            <strong>{movimientos.length}</strong>
+          </article>
+        )}
 
         <article className="inventario-tarjeta">
           <span>Productos activos</span>
@@ -282,44 +308,48 @@ export default function Inventario({ token, esAdmin, onCambio }) {
         )}
       </section>
 
-      <section className="inventario-panel">
-        <h3>Historial de movimientos</h3>
+      {esAdmin && (
+        <section className="inventario-panel">
+          <h3>Historial de movimientos</h3>
 
-        {cargando ? (
-          <p>Cargando movimientos...</p>
-        ) : movimientos.length === 0 ? (
-          <p className="inventario-vacio">Todavía no hay movimientos registrados.</p>
-        ) : (
-          <div className="inventario-tabla-contenedor">
-            <table className="inventario-tabla">
-              <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>Código</th>
-                  <th>Producto</th>
-                  <th>Tipo</th>
-                  <th>Cantidad</th>
-                </tr>
-              </thead>
-              <tbody>
-                {movimientos.map((movimiento) => (
-                  <tr key={movimiento.id}>
-                    <td>{formatoFecha(movimiento.fecha)}</td>
-                    <td>{movimiento.codigo}</td>
-                    <td>{movimiento.producto}</td>
-                    <td>
-                      <span className={`inventario-tipo ${movimiento.tipo}`}>
-                        {movimiento.tipo}
-                      </span>
-                    </td>
-                    <td>{movimiento.cantidad}</td>
+          {cargando ? (
+            <p>Cargando movimientos...</p>
+          ) : movimientos.length === 0 ? (
+            <p className="inventario-vacio">
+              Todavía no hay movimientos registrados.
+            </p>
+          ) : (
+            <div className="inventario-tabla-contenedor">
+              <table className="inventario-tabla">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Código</th>
+                    <th>Producto</th>
+                    <th>Tipo</th>
+                    <th>Cantidad</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
+                </thead>
+                <tbody>
+                  {movimientos.map((movimiento) => (
+                    <tr key={movimiento.id}>
+                      <td>{formatoFecha(movimiento.fecha)}</td>
+                      <td>{movimiento.codigo}</td>
+                      <td>{movimiento.producto}</td>
+                      <td>
+                        <span className={`inventario-tipo ${movimiento.tipo}`}>
+                          {movimiento.tipo}
+                        </span>
+                      </td>
+                      <td>{movimiento.cantidad}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      )}
     </section>
   );
 }

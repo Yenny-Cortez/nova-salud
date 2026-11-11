@@ -39,9 +39,17 @@ async function consultarAPI(ruta, token) {
 
   const datos = await respuesta.json().catch(() => ({}))
 
-  if (respuesta.status === 401 || respuesta.status === 403) {
-    throw new Error(
+  if (respuesta.status === 401) {
+    const error = new Error(
       'Tu sesión no es válida o ha expirado. Inicia sesión nuevamente.',
+    )
+    error.status = 401
+    throw error
+  }
+
+  if (respuesta.status === 403) {
+    throw new Error(
+      datos.mensaje || 'No tienes permiso para realizar esta acción.',
     )
   }
 
@@ -91,6 +99,10 @@ function App() {
 
   const [cargandoDashboard, setCargandoDashboard] = useState(false)
   const [errorDashboard, setErrorDashboard] = useState('')
+
+  const esAdmin = sesion?.usuario?.rol === 'admin'
+
+  const nombreRol = esAdmin ? 'Administrador' : 'Trabajador'
 
   async function iniciarSesion(evento) {
     evento.preventDefault()
@@ -171,14 +183,21 @@ function App() {
       setCargandoDashboard(true)
       setErrorDashboard('')
 
-      const [productos, categorias, ventas, resultadoAlertas, movimientos] =
-        await Promise.all([
-          consultarAPI('/api/productos', sesion.token),
-          consultarAPI('/api/categorias', sesion.token),
-          consultarAPI('/api/ventas', sesion.token),
-          consultarAPI('/api/inventario/alertas', sesion.token),
-          consultarAPI('/api/inventario/movimientos', sesion.token),
-        ])
+      const [
+        productos,
+        categorias,
+        ventas,
+        resultadoAlertas,
+        movimientos,
+      ] = await Promise.all([
+        consultarAPI('/api/productos', sesion.token),
+        consultarAPI('/api/categorias', sesion.token),
+        consultarAPI('/api/ventas', sesion.token),
+        consultarAPI('/api/inventario/alertas', sesion.token),
+        esAdmin
+          ? consultarAPI('/api/inventario/movimientos', sesion.token)
+          : Promise.resolve([]),
+      ])
 
       setDatos({
         productos: Array.isArray(productos) ? productos : [],
@@ -192,10 +211,7 @@ function App() {
     } catch (error) {
       setErrorDashboard(error.message)
 
-      if (
-        error.message.includes('sesión no es válida') ||
-        error.message.includes('ha expirado')
-      ) {
+      if (error.status === 401) {
         cerrarSesion()
       }
     } finally {
@@ -337,7 +353,9 @@ function App() {
     { id: 'categorias', icono: '▤', texto: 'Categorías' },
     { id: 'ventas', icono: '▧', texto: 'Ventas' },
     { id: 'inventario', icono: '▥', texto: 'Inventario' },
-    { id: 'reportes', icono: '▨', texto: 'Reportes' },
+    ...(esAdmin
+      ? [{ id: 'reportes', icono: '▨', texto: 'Reportes' }]
+      : []),
   ]
 
   return (
@@ -388,7 +406,7 @@ function App() {
             </div>
             <div className="sidebar-user-info">
               <strong>{sesion.usuario.nombre}</strong>
-              <span>{sesion.usuario.rol}</span>
+              <span>{nombreRol}</span>
             </div>
           </div>
 
@@ -405,7 +423,7 @@ function App() {
       </aside>
 
       <section className="dashboard-content" id="inicio">
-        {vista === 'reportes' ? (
+        {vista === 'reportes' && esAdmin ? (
           <Reportes token={sesion.token} />
         ) : vista === 'ventas' ? (
           <Ventas
@@ -415,20 +433,20 @@ function App() {
         ) : vista === 'inventario' ? (
           <Inventario
             token={sesion.token}
-            esAdmin={sesion.usuario.rol === 'admin'}
+            esAdmin={esAdmin}
             onCambio={cargarDashboard}
           />
         ) : vista === 'categorias' ? (
           <Categorias
             token={sesion.token}
-            esAdmin={sesion.usuario.rol === 'admin'}
+            esAdmin={esAdmin}
             onCambio={cargarDashboard}
           />
         ) : vista === 'productos' ? (
           <Productos
             token={sesion.token}
             categorias={datos.categorias}
-            esAdmin={sesion.usuario.rol === 'admin'}
+            esAdmin={esAdmin}
           />
         ) : (
           <>
@@ -578,51 +596,53 @@ function App() {
                 )}
               </article>
 
-              <article
-                className="dashboard-panel movements-panel"
-                id="movimientos"
-              >
-                <div className="panel-heading">
-                  <div>
-                    <h2>Movimientos de inventario</h2>
-                    <p>Entradas y salidas recientes</p>
+              {esAdmin && (
+                <article
+                  className="dashboard-panel movements-panel"
+                  id="movimientos"
+                >
+                  <div className="panel-heading">
+                    <div>
+                      <h2>Movimientos de inventario</h2>
+                      <p>Entradas y salidas recientes</p>
+                    </div>
+                    <span className="panel-tag">INVENTARIO</span>
                   </div>
-                  <span className="panel-tag">INVENTARIO</span>
-                </div>
 
-                {movimientosRecientes.length === 0 ? (
-                  <div className="empty-state">
-                    {cargandoDashboard
-                      ? 'Cargando movimientos...'
-                      : 'Todavía no hay movimientos registrados.'}
-                  </div>
-                ) : (
-                  <div className="movement-list">
-                    {movimientosRecientes.map((movimiento) => (
-                      <div className="movement-item" key={movimiento.id}>
-                        <span
-                          className={`movement-symbol ${
-                            movimiento.tipo === 'entrada' ? 'entry' : 'exit'
-                          }`}
-                        >
-                          {movimiento.tipo === 'entrada' ? '↓' : '↑'}
-                        </span>
-                        <div className="movement-info">
-                          <strong>{movimiento.producto}</strong>
-                          <span>{formatoFecha(movimiento.fecha)}</span>
+                  {movimientosRecientes.length === 0 ? (
+                    <div className="empty-state">
+                      {cargandoDashboard
+                        ? 'Cargando movimientos...'
+                        : 'Todavía no hay movimientos registrados.'}
+                    </div>
+                  ) : (
+                    <div className="movement-list">
+                      {movimientosRecientes.map((movimiento) => (
+                        <div className="movement-item" key={movimiento.id}>
+                          <span
+                            className={`movement-symbol ${
+                              movimiento.tipo === 'entrada' ? 'entry' : 'exit'
+                            }`}
+                          >
+                            {movimiento.tipo === 'entrada' ? '↓' : '↑'}
+                          </span>
+                          <div className="movement-info">
+                            <strong>{movimiento.producto}</strong>
+                            <span>{formatoFecha(movimiento.fecha)}</span>
+                          </div>
+                          <div className="movement-quantity">
+                            <strong>
+                              {movimiento.tipo === 'entrada' ? '+' : '-'}
+                              {movimiento.cantidad}
+                            </strong>
+                            <span>{movimiento.tipo}</span>
+                          </div>
                         </div>
-                        <div className="movement-quantity">
-                          <strong>
-                            {movimiento.tipo === 'entrada' ? '+' : '-'}
-                            {movimiento.cantidad}
-                          </strong>
-                          <span>{movimiento.tipo}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </article>
+                      ))}
+                    </div>
+                  )}
+                </article>
+              )}
 
               <article className="dashboard-panel account-panel">
                 <div className="account-decoration">+</div>
@@ -631,7 +651,7 @@ function App() {
                 <p>{sesion.usuario.correo}</p>
                 <div className="account-role">
                   <span className="status-dot" />
-                  Rol: {sesion.usuario.rol}
+                  Rol: {nombreRol}
                 </div>
                 <div className="account-note">
                   Bienvenido al sistema de gestión de Botica Nova Salud.

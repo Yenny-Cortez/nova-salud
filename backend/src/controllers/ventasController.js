@@ -1,9 +1,9 @@
 
 const pool = require('../db');
 
-// Registrar una venta utilizando una transacción
+// Registrar una venta utilizando una transacción.
 async function registrar(req, res) {
-  const { productos } = req.body;
+  const { productos } = req.body || {};
 
   if (!Array.isArray(productos) || productos.length === 0) {
     return res.status(400).json({
@@ -17,8 +17,10 @@ async function registrar(req, res) {
     const id = Number(item.producto_id);
     const cantidad = Number(item.cantidad);
 
-    if (!Number.isInteger(id) || id <= 0 ||
-        !Number.isInteger(cantidad) || cantidad <= 0) {
+    if (
+      !Number.isInteger(id) || id <= 0 ||
+      !Number.isInteger(cantidad) || cantidad <= 0
+    ) {
       return res.status(400).json({
         mensaje: 'Producto o cantidad inválidos'
       });
@@ -32,6 +34,7 @@ async function registrar(req, res) {
   try {
     await client.query('BEGIN');
 
+    // El usuario se obtiene de la autenticación, nunca del formulario.
     const usuarioId = req.usuario.id;
     let total = 0;
     const detalles = [];
@@ -56,7 +59,9 @@ async function registrar(req, res) {
 
       if (producto.stock < cantidad) {
         throw Object.assign(
-          new Error(`Stock insuficiente para ${producto.nombre}. Disponible: ${producto.stock}`),
+          new Error(
+            `Stock insuficiente para ${producto.nombre}. Disponible: ${producto.stock}`
+          ),
           { status: 400 }
         );
       }
@@ -115,7 +120,7 @@ async function registrar(req, res) {
 
     await client.query('COMMIT');
 
-    res.status(201).json({
+    return res.status(201).json({
       mensaje: 'Venta registrada correctamente',
       venta: {
         ...venta.rows[0],
@@ -123,47 +128,66 @@ async function registrar(req, res) {
         detalles
       }
     });
-
   } catch (error) {
     await client.query('ROLLBACK');
 
     res.status(error.status || 500).json({
-      mensaje: error.status ? error.message : 'Error al registrar la venta'
+      mensaje: error.status
+        ? error.message
+        : 'Error al registrar la venta'
     });
 
-    if (!error.status) console.error(error);
-
+    if (!error.status) {
+      console.error(error);
+    }
   } finally {
     client.release();
   }
 }
 
-// Consultar historial de ventas
+// Administrador: todas las ventas.
+// Trabajador: solamente sus propias ventas.
 async function listar(req, res) {
   try {
-    const resultado = await pool.query(
-      `SELECT
-         v.id,
-         v.usuario_id,
-         u.nombre AS vendedor,
-         v.total,
-         v.fecha
-       FROM ventas v
-       INNER JOIN usuarios u ON u.id = v.usuario_id
-       ORDER BY v.fecha DESC`
-    );
+    const esAdmin = req.usuario.rol === 'admin';
 
-    res.json(resultado.rows);
+    const consulta = esAdmin
+      ? `SELECT
+           v.id,
+           v.usuario_id,
+           u.nombre AS vendedor,
+           v.total,
+           v.fecha
+         FROM ventas v
+         INNER JOIN usuarios u ON u.id = v.usuario_id
+         ORDER BY v.fecha DESC`
+      : `SELECT
+           v.id,
+           v.usuario_id,
+           u.nombre AS vendedor,
+           v.total,
+           v.fecha
+         FROM ventas v
+         INNER JOIN usuarios u ON u.id = v.usuario_id
+         WHERE v.usuario_id = $1
+         ORDER BY v.fecha DESC`;
 
+    const parametros = esAdmin ? [] : [req.usuario.id];
+
+    const resultado = await pool.query(consulta, parametros);
+
+    return res.json(resultado.rows);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
+    console.error('Error al consultar las ventas:', error);
+
+    return res.status(500).json({
       mensaje: 'Error al consultar las ventas'
     });
   }
 }
 
-// Consultar una venta con sus detalles
+// Consultar una venta.
+// El trabajador solamente puede consultar una venta propia.
 async function obtener(req, res) {
   const id = Number(req.params.id);
 
@@ -174,14 +198,34 @@ async function obtener(req, res) {
   }
 
   try {
-    const venta = await pool.query(
-      `SELECT v.id, v.usuario_id, u.nombre AS vendedor,
-              v.total, v.fecha
-       FROM ventas v
-       INNER JOIN usuarios u ON u.id = v.usuario_id
-       WHERE v.id = $1`,
-      [id]
-    );
+    const esAdmin = req.usuario.rol === 'admin';
+
+    const consulta = esAdmin
+      ? `SELECT
+           v.id,
+           v.usuario_id,
+           u.nombre AS vendedor,
+           v.total,
+           v.fecha
+         FROM ventas v
+         INNER JOIN usuarios u ON u.id = v.usuario_id
+         WHERE v.id = $1`
+      : `SELECT
+           v.id,
+           v.usuario_id,
+           u.nombre AS vendedor,
+           v.total,
+           v.fecha
+         FROM ventas v
+         INNER JOIN usuarios u ON u.id = v.usuario_id
+         WHERE v.id = $1
+           AND v.usuario_id = $2`;
+
+    const parametros = esAdmin
+      ? [id]
+      : [id, req.usuario.id];
+
+    const venta = await pool.query(consulta, parametros);
 
     if (venta.rowCount === 0) {
       return res.status(404).json({
@@ -190,22 +234,26 @@ async function obtener(req, res) {
     }
 
     const detalles = await pool.query(
-      `SELECT d.producto_id, p.nombre, d.cantidad,
-              d.precio_unitario, d.subtotal
+      `SELECT
+         d.producto_id,
+         p.nombre,
+         d.cantidad,
+         d.precio_unitario,
+         d.subtotal
        FROM detalle_ventas d
        INNER JOIN productos p ON p.id = d.producto_id
        WHERE d.venta_id = $1`,
       [id]
     );
 
-    res.json({
+    return res.json({
       venta: venta.rows[0],
       detalles: detalles.rows
     });
-
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
+    console.error('Error al consultar el detalle de la venta:', error);
+
+    return res.status(500).json({
       mensaje: 'Error al consultar la venta'
     });
   }
