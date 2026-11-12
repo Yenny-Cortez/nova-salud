@@ -1,0 +1,31 @@
+codigo,nombre_producto,categoria,precio_venta,stock_actual
+MED-001,Paracetamol 500mg (Blister x 10),Analgésicos,3.50,150
+MED-002,Ibuprofeno 400mg (Blister x 10),Analgésicos,4.20,120
+MED-003,Amoxicilina 500mg (Caja x 30),Antibióticos,25.00,80
+MED-004,Azitromicina 500mg (Caja x 5),Antibióticos,32.00,60
+MED-005,Omeprazol 20mg (Caja x 30),Gastrointestinal,18.50,95
+MED-006,Loperamida 2mg (Blister x 10),Gastrointestinal,5.00,110
+MED-007,Salbutamol 100mcg (Inhalador),Respiratorio,45.00,40
+MED-008,Loratadina 10mg (Blister x 10),Antihistamínicos,6.00,130
+MED-009,Cetirizina 10mg (Blister x 10),Antihistamínicos,5.50,140
+MED-010,Naproxeno 550mg (Blister x 10),Analgésicos,8.50,90
+MED-011,Diclofenaco 50mg (Blister x 10),Analgésicos,5.00,100
+MED-012,Metformina 850mg (Caja x 30),Antidiabéticos,15.00,75
+MED-013,Glibenclamida 5mg (Caja x 30),Antidiabéticos,12.00,65
+MED-014,Losartana 50mg (Caja x 30),Cardiovascular,16.00,85
+MED-015,Enalapril 10mg (Caja x 30),Cardiovascular,11.00,90
+MED-016,Aspirina 100mg (Caja x 100),Cardiovascular,22.00,50
+MED-017,Vitamina C 1g (Frasco x 30 efervescentes),Vitaminas,28.00,70
+MED-018,Complejo B (Caja x 30 tabletas),Vitaminas,20.00,85
+MED-019,Suero Oral 1 Litro (Sobres),Hidratación,3.50,200
+MED-020,Alcohol Medicinal 96° 250ml,Antisépticos,4.50,150
+MED-021,Agua Oxigenada 10 Vol 120ml,Antisépticos,3.00,120
+MED-022,Gasas Estériles (Paquete x 5),Primeros Auxilios,2.50,180
+MED-023,Esparadrapo 2.5cm x 5m,Primeros Auxilios,6.50,90
+MED-024,Termómetro Digital Clínico,Equipos Médicos,18.00,30
+MED-025,Jarabe para la Tos Ambroxol 150ml,Respiratorio,14.00,50
+MED-026,Clorfenamina 4mg (Blister x 10),Antihistamínicos,3.00,110
+MED-027,Ketorolaco 10mg (Blister x 10),Analgésicos,12.00,70
+MED-028,Ranitidina 150mg (Caja x 30),Gastrointestinal,14.00,60
+MED-029,Simeticona 40mg (Frasco x 30ml),Gastrointestinal,15.00,45
+MED-030,Clindamicina 300mg (Caja x 16),Antibióticos,48.00,25
